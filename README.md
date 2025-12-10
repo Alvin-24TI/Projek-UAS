@@ -1,2 +1,6 @@
 # Projek-UAS
-Alvin, Hajid
+Aplikasi Manajemen Toko Online Sederhana
+
+Anggota:
+Alvin
+Hajid
