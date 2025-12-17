@@ -21,7 +21,21 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
+
+    
+    // Relasi: User punya banyak Order
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    // Helper untuk cek role di Middleware/Blade
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
