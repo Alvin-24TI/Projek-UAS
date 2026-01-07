@@ -1,13 +1,13 @@
 @extends('layouts.customer')
 
-@section('title', 'Detail Pesanan - Toko Online')
+@section('title', 'Detail Pesanan - JBON STORE')
 
 @section('content')
 <!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-decoration-none">Beranda</a></li>
-        <li class="breadcrumb-item active">{{ $order->invoice_number }}</li>
+        <li class="breadcrumb-item active">{{ $order->order_number }}</li>
     </ol>
 </nav>
 
@@ -24,7 +24,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h5 class="text-muted mb-1">Nomor Pesanan</h5>
-                        <h2 class="text-primary mb-0">{{ $order->invoice_number }}</h2>
+                        <h2 class="text-primary mb-0">{{ $order->order_number }}</h2>
                     </div>
                     <div class="col text-end">
                         <p class="text-muted mb-1">Tanggal Pesanan</p>
@@ -270,7 +270,7 @@
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal:</span>
-                        <span>Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Ongkos Kirim:</span>
@@ -288,7 +288,7 @@
                     <div class="d-flex justify-content-between">
                         <strong>Total:</strong>
                         <strong class="text-primary" style="font-size: 1.25rem;">
-                            Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                            Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                         </strong>
                     </div>
                 </div>

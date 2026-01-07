@@ -66,10 +66,10 @@
             <tbody>
                 @forelse($orders as $order)
                 <tr>
-                    <td><strong>{{ $order->invoice_number }}</strong></td>
+                    <td><strong>{{ $order->order_number }}</strong></td>
                     <td>{{ $order->user->name }}</td>
                     <td>{{ $order->orderItems->count() }} item(s)</td>
-                    <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
                     <td>
                         @php
                             $statusColors = [
@@ -79,7 +79,7 @@
                                 'cancelled' => 'danger'
                             ];
                         @endphp
-                        <span class="badge bg-{{ $statusColors[$order->status] ?? 'secondary' }}">
+                        <span class="badge bg-{{ $statusColors[$order->status] ?? 'secondary' }} text-white">
                             {{ ucfirst($order->status) }}
                         </span>
                     </td>
@@ -102,7 +102,9 @@
 </div>
 
 <!-- Pagination -->
-<div class="mt-4">
-    {{ $orders->links() }}
+<div class="mt-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+        {{ $orders->links('pagination::bootstrap-5') }}
+    </nav>
 </div>
 @endsection

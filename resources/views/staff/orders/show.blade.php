@@ -21,7 +21,7 @@
                     <h6 class="m-0 font-weight-bold text-white">Nomor Pesanan</h6>
                 </div>
                 <div class="card-body text-center">
-                    <h2 class="text-primary mb-0">{{ $order->invoice_number }}</h2>
+                    <h2 class="text-primary mb-0">{{ $order->order_number }}</h2>
                     <small class="text-muted">{{ $order->created_at->format('d M Y H:i') }}</small>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                     <hr>
                     <div class="text-center">
                         <h5 class="text-primary mb-0">
-                            Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                            Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                         </h5>
                         <small class="text-muted">Total Pembayaran</small>
                     </div>
@@ -196,7 +196,7 @@
                     <!-- Total -->
                     <div class="alert alert-light border-primary border-2 text-center mt-3">
                         <h5 class="text-primary mb-0">
-                            Total: Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                            Total: Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                         </h5>
                     </div>
                 </div>

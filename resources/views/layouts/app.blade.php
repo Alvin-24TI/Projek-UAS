@@ -53,7 +53,8 @@
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/dashboard') }}">
-                <div class="sidebar-brand-text mx-3">TOKO ONLINE</div>
+                <i class="fas fa-fw fa-shopping-cart" style="font-size: 1.5rem;"></i>
+                <div class="sidebar-brand-text mx-3">JBON STORE</div>
             </a>
 
             <!-- Divider -->

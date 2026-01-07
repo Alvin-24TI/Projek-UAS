@@ -7,7 +7,7 @@
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Detail Customer</h1>
-        <a href="{{ route('admin.customers.index') }}" class="btn btn-secondary">
+        <a href="{{ route('staff.customers.index') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
     </div>
@@ -120,7 +120,7 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.orders.show', $order->id) }}" class="btn btn-sm btn-info" title="Lihat Detail">
+                                                <a href="{{ route('staff.orders.show', $order->id) }}" class="btn btn-sm btn-info" title="Lihat Detail">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             </td>

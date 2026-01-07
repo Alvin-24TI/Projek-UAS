@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-@section('title', 'Checkout - Toko Online')
+@section('title', 'Checkout - JBON STORE')
 
 @section('content')
 <!-- Breadcrumb -->

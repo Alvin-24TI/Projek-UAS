@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">{{ $order->invoice_number }}</h1>
+    <h1 class="h3 mb-0 text-gray-800">{{ $order->order_number }}</h1>
     <div class="gap-2 d-flex">
         @if(auth()->user()->isAdmin())
             @if($order->status === 'pending')
@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-md-6 text-md-end">
                         <h5 class="mb-3">
-                            <strong>Total: Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong>
+                            <strong>Total: Rp {{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                         </h5>
                     </div>
                 </div>

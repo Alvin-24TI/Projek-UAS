@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Edit Order {{ $order->invoice_number }}</h1>
+    <h1 class="h3 mb-0 text-gray-800">Edit Order {{ $order->order_number }}</h1>
 </div>
 
 @if(session('error'))
@@ -66,7 +66,7 @@
                                 @endforeach
                                 <tr class="table-light">
                                     <td colspan="3"><strong>Total</strong></td>
-                                    <td><strong>Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong></td>
+                                    <td><strong>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</strong></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -94,7 +94,7 @@
             <div class="card-body">
                 <p class="mb-2">
                     <strong>Invoice:</strong><br>
-                    {{ $order->invoice_number }}
+                    {{ $order->order_number }}
                 </p>
                 <p class="mb-2">
                     <strong>Total Items:</strong><br>

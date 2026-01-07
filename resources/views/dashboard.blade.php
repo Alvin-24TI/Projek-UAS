@@ -97,7 +97,7 @@
             </div>
             <!-- Card Body -->
             <div class="card-body">
-                <p>Dashboard App Toko Online.</p>
+                <p>Dashboard App JBON STORE.</p>
             </div>
         </div>
     </div>

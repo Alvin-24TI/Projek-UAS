@@ -96,7 +96,9 @@
 </div>
 
 <!-- Pagination -->
-<div class="mt-4">
-    {{ $products->links() }}
+<div class="mt-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+        {{ $products->links('pagination::bootstrap-5') }}
+    </nav>
 </div>
 @endsection

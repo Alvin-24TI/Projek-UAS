@@ -41,7 +41,7 @@
                                         <small>{{ $customer->email }}</small>
                                     </td>
                                     <td>
-                                        {{ $customer->orders_count }}
+                                        <span class="badge bg-info">{{ $customer->orders_count }}</span>
                                     </td>
                                     <td>
                                         @php
@@ -53,7 +53,7 @@
                                         <small>{{ $customer->created_at->format('d M Y') }}</small>
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.customers.show', $customer->id) }}" class="btn btn-sm btn-info" title="Lihat Detail">
+                                        <a href="{{ route('staff.customers.show', $customer->id) }}" class="btn btn-sm btn-info" title="Lihat Detail">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </td>

@@ -52,7 +52,7 @@
                                 @case('cancelled') bg-danger @break
                             @endswitch">
                             <h6 class="m-0 font-weight-bold text-white">
-                                {{ $order->invoice_number }}
+                                {{ $order->order_number }}
                             </h6>
                             <span class="badge badge-light">
                                 @switch($order->status)
@@ -85,7 +85,7 @@
                                 <div class="col-6">
                                     <h6 class="text-muted small mb-1">Total Pesanan</h6>
                                     <p class="mb-0 font-weight-bold text-primary">
-                                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                        Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                                     </p>
                                 </div>
                             </div>

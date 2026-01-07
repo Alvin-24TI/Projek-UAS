@@ -124,13 +124,13 @@ class HomeController extends Controller
 
         try {
             // Create order
-            $invoiceNumber = 'INV-' . now()->format('YmdHis') . '-' . rand(100, 999);
+            $orderNumber = 'ORD-' . now()->format('YmdHis') . '-' . rand(100, 999);
 
             $order = Order::create([
                 'user_id' => $user->id,
-                'invoice_number' => $invoiceNumber,
+                'order_number' => $orderNumber,
                 'status' => 'pending',
-                'total_price' => $totalPrice,
+                'total_amount' => $totalPrice,
                 'shipping_address' => $validated['shipping_address'],
                 'shipping_phone' => $validated['shipping_phone'],
                 'shipping_city' => $validated['shipping_city'],
@@ -155,7 +155,7 @@ class HomeController extends Controller
             session(['cart' => []]);
 
             return redirect()->route('my-orders')
-                ->with('success', 'Pesanan berhasil dibuat! Nomor Invoice: ' . $invoiceNumber);
+                ->with('success', 'Pesanan berhasil dibuat! Nomor Order: ' . $orderNumber);
 
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan saat membuat pesanan: ' . $e->getMessage());

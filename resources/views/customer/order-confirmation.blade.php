@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-@section('title', 'Konfirmasi Pesanan - Toko Online')
+@section('title', 'Konfirmasi Pesanan - JBON STORE')
 
 @section('content')
 <!-- Success Message -->
@@ -19,7 +19,7 @@
                 <h4 class="alert-heading">
                     <i class="fas fa-check-circle"></i> Pesanan Berhasil Dibuat!
                 </h4>
-                <p class="mb-0">Terima kasih telah berbelanja di Toko Online. Pesanan Anda telah kami terima dan sedang diproses.</p>
+                <p class="mb-0">Terima kasih telah berbelanja di JBON STORE. Pesanan Anda telah kami terima dan sedang diproses.</p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
@@ -35,7 +35,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h5 class="text-muted mb-1">Nomor Pesanan</h5>
-                        <h2 class="text-primary mb-0">{{ $order->invoice_number }}</h2>
+                        <h2 class="text-primary mb-0">{{ $order->order_number }}</h2>
                     </div>
                     <div class="col text-end">
                         <p class="text-muted mb-1">Tanggal Pesanan</p>
@@ -229,7 +229,7 @@
                 <div class="mb-3">
                     <div class="d-flex justify-content-between mb-2">
                         <span>Subtotal:</span>
-                        <span>Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
+                        <span>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Ongkos Kirim:</span>
@@ -247,7 +247,7 @@
                     <div class="d-flex justify-content-between">
                         <strong>Total Pembayaran:</strong>
                         <strong class="text-primary" style="font-size: 1.25rem;">
-                            Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                            Rp {{ number_format($order->total_amount, 0, ',', '.') }}
                         </strong>
                     </div>
                 </div>

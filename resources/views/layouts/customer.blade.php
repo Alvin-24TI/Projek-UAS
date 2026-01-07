@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Toko Online - Your Shopping Destination">
+    <meta name="description" content="JBON STORE - Your Shopping Destination">
     <meta name="author" content="">
 
-    <title>@yield('title', 'Toko Online')</title>
+    <title>@yield('title', 'JBON STORE')</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -328,7 +328,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-shopping-bag"></i> TOKO ONLINE
+                <i class="fas fa-shopping-cart"></i> JBON STORE
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -421,7 +421,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p><strong>TOKO ONLINE</strong> - Belanja online terpercaya | made by Alvin & HajidGantenk</p>
+        <p><strong>JBON STORE</strong> - Belanja online terpercaya | made by Alvin & HajidGantenk</p>
     </footer>
 
     <!-- Bootstrap JS -->

@@ -77,7 +77,9 @@
 </div>
 
 <!-- Pagination -->
-<div class="mt-4">
-    {{ $categories->links() }}
+<div class="mt-4 d-flex justify-content-center">
+    <nav aria-label="Page navigation">
+        {{ $categories->links('pagination::bootstrap-5') }}
+    </nav>
 </div>
 @endsection

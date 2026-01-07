@@ -79,7 +79,7 @@
                     <tbody>
                         @foreach($product->orderItems as $item)
                         <tr>
-                            <td><a href="{{ route('admin.orders.show', $item->order) }}">#{{ $item->order->invoice_number }}</a></td>
+                            <td><a href="{{ route('admin.orders.show', $item->order) }}">#{{ $item->order->order_number }}</a></td>
                             <td>{{ $item->quantity }}</td>
                             <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
                             <td>{{ $item->created_at->format('d M Y') }}</td>

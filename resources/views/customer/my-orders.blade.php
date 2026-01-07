@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-@section('title', 'Pesanan Saya - Toko Online')
+@section('title', 'Pesanan Saya - JBON STORE')
 
 @section('content')
 <!-- Breadcrumb -->
@@ -65,7 +65,7 @@
                     <div class="col-lg-6">
                         <h5 class="mb-1">
                             <a href="{{ route('order.detail', $order->id) }}" class="text-decoration-none">
-                                {{ $order->invoice_number }}
+                                {{ $order->order_number }}
                             </a>
                         </h5>
                         <p class="text-muted mb-2">
@@ -73,7 +73,7 @@
                         </p>
                         <p class="mb-0">
                             <strong>{{ $order->orderItems->count() }}</strong> Produk |
-                            <strong>Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong>
+                            <strong>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                         </p>
                     </div>
 

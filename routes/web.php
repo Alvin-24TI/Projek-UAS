@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Staff\CustomerController as StaffCustomerController;
+use App\Http\Controllers\Staff\OrderController as StaffOrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
@@ -40,14 +42,15 @@ Route::middleware(['auth'])->group(function () {
 // Admin Routes - Can access everything
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductController::class);
-    Route::resource('orders', OrderController::class);
-    Route::resource('customers', CustomerController::class);
+    Route::resource('orders', AdminOrderController::class);
+    Route::resource('customers', AdminCustomerController::class);
     Route::resource('categories', CategoryController::class);
+    Route::patch('/orders/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 });
 
 // Staff Routes - Can access orders, customers and update status
 Route::middleware(['auth', 'role:staff,admin'])->prefix('staff')->name('staff.')->group(function () {
-    Route::resource('orders', OrderController::class);
-    Route::resource('customers', CustomerController::class, ['only' => ['index', 'show']]);
-    Route::patch('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    Route::resource('orders', StaffOrderController::class);
+    Route::resource('customers', StaffCustomerController::class, ['only' => ['index', 'show']]);
+    Route::patch('/orders/{order}/update-status', [StaffOrderController::class, 'updateStatus'])->name('orders.update-status');
 });

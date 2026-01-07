@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
 
@@ -33,9 +34,15 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('invoice_number')->unique();
+            $table->string('order_number')->unique();
             $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
-            $table->decimal('total_price', 12, 2);
+            $table->decimal('total_amount', 12, 2);
+            $table->text('shipping_address')->nullable();
+            $table->string('shipping_phone')->nullable();
+            $table->string('shipping_city')->nullable();
+            $table->string('shipping_province')->nullable();
+            $table->string('shipping_zip')->nullable();
+            $table->string('payment_method')->nullable();
             $table->timestamps();
         });
 

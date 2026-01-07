@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-@section('title', 'Toko Online - Berbelanja Produk Berkualitas')
+@section('title', 'JBON STORE - Berbelanja Produk Berkualitas')
 
 @section('content')
 <div class="row">

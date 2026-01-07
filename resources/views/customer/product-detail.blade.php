@@ -1,6 +1,6 @@
 @extends('layouts.customer')
 
-@section('title', $product->name . ' - Toko Online')
+@section('title', $product->name . ' - JBON STORE')
 
 @section('content')
 <!-- Breadcrumb -->

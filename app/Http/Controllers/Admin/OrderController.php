@@ -21,9 +21,9 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Search by invoice number
+        // Search by order number
         if ($request->search) {
-            $query->where('invoice_number', 'like', '%' . $request->search . '%')
+            $query->where('order_number', 'like', '%' . $request->search . '%')
                   ->orWhereHas('user', function ($q) {
                       $q->where('name', 'like', '%' . request()->search . '%');
                   });
@@ -59,10 +59,10 @@ class OrderController extends Controller
         ]);
 
         try {
-            // Generate invoice number
-            $invoiceNumber = 'INV-' . date('YmdHis') . '-' . rand(1000, 9999);
+            // Generate order number
+            $orderNumber = 'ORD-' . date('YmdHis') . '-' . rand(1000, 9999);
 
-            $totalPrice = 0;
+            $totalAmount = 0;
             $items = $validated['items'];
 
             // Calculate total and validate stock
@@ -71,14 +71,14 @@ class OrderController extends Controller
                 if ($product->stock < $item['quantity']) {
                     return back()->with('error', "Stok {$product->name} tidak cukup");
                 }
-                $totalPrice += $product->price * $item['quantity'];
+                $totalAmount += $product->price * $item['quantity'];
             }
 
             // Create order
             $order = Order::create([
                 'user_id' => $validated['user_id'],
-                'invoice_number' => $invoiceNumber,
-                'total_price' => $totalPrice,
+                'order_number' => $orderNumber,
+                'total_amount' => $totalAmount,
                 'status' => 'pending',
             ]);
 
@@ -97,7 +97,7 @@ class OrderController extends Controller
             }
 
             return redirect()->route('admin.orders.show', $order)
-                           ->with('success', 'Pesanan berhasil dibuat dengan nomor invoice: ' . $invoiceNumber);
+                           ->with('success', 'Pesanan berhasil dibuat dengan nomor order: ' . $orderNumber);
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
@@ -181,7 +181,7 @@ class OrderController extends Controller
                     $product->decrement('stock', $item['quantity']);
                 }
 
-                $order->update(['total_price' => $totalPrice]);
+                $order->update(['total_amount' => $totalPrice]);
             }
 
             return redirect()->route('admin.orders.show', $order)
