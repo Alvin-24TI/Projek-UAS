@@ -1,5 +1,5 @@
 <?php
-// app/Models/Order.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +9,16 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'invoice_number', 'status', 'total_price'];
+    protected $fillable = [
+        'user_id',
+        'invoice_number',
+        'status',
+        'total_price',
+        'shipping_address',
+        'shipping_phone',
+        'shipping_city',
+        'payment_method'
+    ];
 
     /**
      * Get the user that owns this order

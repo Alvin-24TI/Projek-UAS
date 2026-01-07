@@ -31,7 +31,6 @@
             <thead class="table-light">
                 <tr>
                     <th>Name</th>
-                    <th>Slug</th>
                     <th>Products</th>
                     <th>Created</th>
                     <th>Actions</th>
@@ -47,7 +46,6 @@
                         <small class="text-muted">{{ Str::limit($category->description, 50) }}</small>
                         @endif
                     </td>
-                    <td><code>{{ $category->slug }}</code></td>
                     <td>
                         <span class="badge bg-info">{{ $category->products_count }}</span>
                     </td>

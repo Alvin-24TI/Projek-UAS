@@ -94,10 +94,10 @@
             </li>
             @endif
 
-            <!-- Nav Item - Customers (Admin Only) -->
-            @if(auth()->check() && auth()->user()->isAdmin())
-            <li class="nav-item {{ request()->is('admin/customers*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.customers.index') }}">
+            <!-- Nav Item - Customers (Admin & Staff) -->
+            @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isStaff()))
+            <li class="nav-item {{ request()->is('admin/customers*', 'staff/customers*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ auth()->user()->isAdmin() ? route('admin.customers.index') : route('staff.customers.index') }}">
                     <i class="fas fa-fw fa-users"></i>
                     <span>Customers</span>
                 </a>
@@ -129,18 +129,7 @@
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                    <!-- Topbar Search -->
-                    <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -204,7 +193,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Projek UAS {{ date('Y') }}</span>
+                        <span>made by Alvin & HajidGantenk</span>
                     </div>
                 </div>
             </footer>

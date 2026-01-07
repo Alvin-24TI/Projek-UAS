@@ -34,6 +34,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            // Redirect based on user role
+            if ($user->role === 'customer') {
+                return redirect()->intended('/');
+            }
+
             return redirect()->intended('/dashboard');
         }
 
@@ -59,12 +65,13 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'role' => 'guest', // Default role for new registrations
+            'role' => 'customer', // Default role for new registrations
         ]);
 
         Auth::login($user);
 
-        return redirect()->intended('/dashboard');
+        // Customers are redirected to home page
+        return redirect()->intended('/');
     }
 
     public function logout(Request $request)
