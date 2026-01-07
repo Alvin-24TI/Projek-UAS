@@ -20,6 +20,25 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <style>
+        .collapse-inner .collapse-item {
+            color: #fff !important;
+            font-weight: 500;
+        }
+
+        .collapse-inner .collapse-item:hover {
+            color: #e3e6f0 !important;
+            background-color: #1e5ba8 !important;
+            border-radius: 0.25rem;
+        }
+
+        .collapse-inner .collapse-item.active {
+            color: #fff !important;
+            background-color: #1e5ba8 !important;
+            font-weight: 600;
+        }
+    </style>
+
     @stack('css')
 
 </head>
@@ -30,7 +49,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/dashboard') }}">
@@ -41,7 +60,7 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
+            <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('/dashboard') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
@@ -55,59 +74,48 @@
                 Management
             </div>
 
-            <!-- Nav Item - Products -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProducts"
-                    aria-expanded="true" aria-controls="collapseProducts">
+            <!-- Nav Item - Products (Admin Only) -->
+            @if(auth()->check() && auth()->user()->isAdmin())
+            <li class="nav-item {{ request()->is('admin/products*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.products.index') }}">
                     <i class="fas fa-fw fa-box"></i>
                     <span>Products</span>
                 </a>
-                <div id="collapseProducts" class="collapse" aria-labelledby="headingProducts" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Product Management:</h6>
-                        <a class="collapse-item" href="#">View Products</a>
-                        <a class="collapse-item" href="#">Add Product</a>
-                    </div>
-                </div>
             </li>
+            @endif
 
-            <!-- Nav Item - Orders -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders"
-                    aria-expanded="true" aria-controls="collapseOrders">
+            <!-- Nav Item - Orders (Admin & Staff) -->
+            @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isStaff()))
+            <li class="nav-item {{ request()->is('admin/orders*', 'staff/orders*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ auth()->user()->isAdmin() ? route('admin.orders.index') : route('staff.orders.index') }}">
                     <i class="fas fa-fw fa-shopping-cart"></i>
                     <span>Orders</span>
                 </a>
-                <div id="collapseOrders" class="collapse" aria-labelledby="headingOrders" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Order Management:</h6>
-                        <a class="collapse-item" href="#">View Orders</a>
-                        <a class="collapse-item" href="#">New Order</a>
-                    </div>
-                </div>
             </li>
+            @endif
 
-            <!-- Nav Item - Customers -->
-            <li class="nav-item">
-                <a class="nav-link" href="#">
+            <!-- Nav Item - Customers (Admin Only) -->
+            @if(auth()->check() && auth()->user()->isAdmin())
+            <li class="nav-item {{ request()->is('admin/customers*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.customers.index') }}">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Customers</span></a>
+                    <span>Customers</span>
+                </a>
             </li>
+            @endif
 
-            <!-- Nav Item - Categories -->
-            <li class="nav-item">
-                <a class="nav-link" href="#">
+            <!-- Nav Item - Categories (Admin Only) -->
+            @if(auth()->check() && auth()->user()->isAdmin())
+            <li class="nav-item {{ request()->is('admin/categories*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.categories.index') }}">
                     <i class="fas fa-fw fa-list"></i>
-                    <span>Categories</span></a>
+                    <span>Categories</span>
+                </a>
             </li>
+            @endif
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
 
         </ul>
         <!-- End of Sidebar -->
@@ -120,11 +128,6 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
 
                     <!-- Topbar Search -->
                     <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">

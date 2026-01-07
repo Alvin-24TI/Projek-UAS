@@ -3,46 +3,120 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display a listing of products
+     */
+    public function index()
     {
-        // Pagination + Search Filter
+        // Pagination + Search Filter + Category Filter
         $query = Product::with('category');
-        if($request->search) {
-            $query->where('name', 'like', '%'.$request->search.'%');
+
+        if(request()->search) {
+            $query->where('name', 'like', '%'.request()->search.'%')
+                  ->orWhere('description', 'like', '%'.request()->search.'%');
         }
-        $products = $query->paginate(10);
-        return view('admin.products.index', compact('products'));
+
+        if(request()->category) {
+            $query->where('category_id', request()->category);
+        }
+
+        $products = $query->orderByDesc('created_at')->paginate(10);
+        $categories = Category::all();
+
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
-    public function store(Request $request)
+    /**
+     * Show the form for creating a new product
+     */
+    public function create()
     {
-        // Form Validation
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Upload Validation
-        ]);
-
-        $data = $request->all();
-        $data['slug'] = \Str::slug($request->name);
-
-        // Upload File Logic
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
-        }
-
-        Product::create($data);
-        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil ditambahkan');
+        $categories = Category::all();
+        return view('admin.products.create', compact('categories'));
     }
 
-    // ... method update (mirip store, handle delete old image), destroy, edit, create
+    /**
+     * Store a newly created product in database
+     */
+    public function store(StoreProductRequest $request)
+    {
+        $validated = $request->validated();
+        $validated['slug'] = Str::slug($validated['name']);
+
+        // Handle File Upload
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        Product::create($validated);
+
+        return redirect()->route('admin.products.index')
+                       ->with('success', 'Produk berhasil ditambahkan');
+    }
+
+    /**
+     * Display the specified product
+     */
+    public function show(Product $product)
+    {
+        $product->load('category', 'orderItems');
+        return view('admin.products.show', compact('product'));
+    }
+
+    /**
+     * Show the form for editing the specified product
+     */
+    public function edit(Product $product)
+    {
+        $categories = Category::all();
+        return view('admin.products.edit', compact('product', 'categories'));
+    }
+
+    /**
+     * Update the specified product in database
+     */
+    public function update(UpdateProductRequest $request, Product $product)
+    {
+        $validated = $request->validated();
+        $validated['slug'] = Str::slug($validated['name']);
+
+        // Handle File Upload (Delete old image if new one uploaded)
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($validated);
+
+        return redirect()->route('admin.products.index')
+                       ->with('success', 'Produk berhasil diperbarui');
+    }
+
+    /**
+     * Remove the specified product from database
+     */
+    public function destroy(Product $product)
+    {
+        // Delete image file if exists
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        $product->delete();
+
+        return redirect()->route('admin.products.index')
+                       ->with('success', 'Produk berhasil dihapus');
+    }
 }

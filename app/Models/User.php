@@ -24,7 +24,7 @@ class User extends Authenticatable
         'role',
     ];
 
-    
+
     // Relasi: User punya banyak Order
     public function orders()
     {
@@ -35,6 +35,21 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return $this->role === $role;
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isStaff()
+    {
+        return $this->role === 'staff';
+    }
+
+    public function isGuest()
+    {
+        return $this->role === 'guest';
     }
 
     /**
