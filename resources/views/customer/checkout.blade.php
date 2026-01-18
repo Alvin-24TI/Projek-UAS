@@ -160,6 +160,30 @@
                     @error('payment_method')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                     @enderror
+
+                    <!-- Payment Proof Upload for Transfer -->
+                    <div id="payment-proof-container" class="mt-4 p-4 border border-warning rounded-3" style="display: none;">
+                        <h6 class="fw-bold mb-3">
+                            <i class="fas fa-file-upload text-warning"></i> Upload Bukti Pembayaran Transfer
+                        </h6>
+                        <div class="mb-3">
+                            <label for="payment_proof" class="form-label fw-bold">Bukti Transfer Bank *</label>
+                            <input type="file" class="form-control @error('payment_proof') is-invalid @enderror"
+                                id="payment_proof" name="payment_proof" accept="image/*,.pdf"
+                                placeholder="Pilih file bukti transfer">
+                            @error('payment_proof')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">
+                                Format: JPG, PNG, atau PDF. Ukuran maksimal: 5MB
+                            </small>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> <small>
+                                Silakan upload screenshot atau foto bukti transfer. Pastikan nama rekening tujuan terlihat jelas.
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -257,4 +281,30 @@
         </div>
     </div>
 </div>
-@endsection
+
+<script>
+    // Show/Hide payment proof upload based on payment method
+    document.addEventListener('DOMContentLoaded', function() {
+        const proofContainer = document.getElementById('payment-proof-container');
+        const radioButtons = document.querySelectorAll('input[name="payment_method"]');
+        
+        function toggleProofContainer() {
+            const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            if (selectedMethod === 'transfer') {
+                proofContainer.style.display = 'block';
+                document.getElementById('payment_proof').required = true;
+            } else {
+                proofContainer.style.display = 'none';
+                document.getElementById('payment_proof').required = false;
+                document.getElementById('payment_proof').value = '';
+            }
+        }
+        
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', toggleProofContainer);
+        });
+        
+        // Initial state
+        toggleProofContainer();
+    });
+</script>

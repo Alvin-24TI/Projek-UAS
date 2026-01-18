@@ -20,6 +20,9 @@ class Order extends Model
         'shipping_province',
         'shipping_zip',
         'payment_method',
+        'payment_proof',
+        'proof_status',
+        'proof_rejection_reason',
         'notes',
         'pelanggan_id'
     ];

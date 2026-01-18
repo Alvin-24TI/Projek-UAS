@@ -151,7 +151,7 @@
                                     <td>
                                         <div class="d-flex gap-3">
                                             @if ($item->product->image)
-                                                <img src="{{ asset('storage/products/' . $item->product->image) }}"
+                                                <img src="{{ asset('storage/' . $item->product->image) }}"
                                                     alt="{{ $item->product->name }}"
                                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                             @else

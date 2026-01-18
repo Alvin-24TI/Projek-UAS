@@ -223,9 +223,27 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'status' => 'required|in:pending,processing,completed,cancelled',
+            'proof_status' => 'nullable|in:pending,approved,rejected',
+            'proof_rejection_reason' => 'nullable|string'
         ]);
 
-        $order->update(['status' => $validated['status']]);
+        $updateData = ['status' => $validated['status']];
+
+        // Handle proof status update
+        if ($request->proof_status) {
+            $updateData['proof_status'] = $request->proof_status;
+            
+            if ($request->proof_status === 'rejected') {
+                $updateData['proof_rejection_reason'] = $request->proof_rejection_reason;
+                // Jika bukti ditolak, ubah status order ke cancelled
+                $updateData['status'] = 'cancelled';
+            } else if ($request->proof_status === 'approved') {
+                // Jika bukti disetujui, ubah status ke processing
+                $updateData['status'] = 'processing';
+            }
+        }
+
+        $order->update($updateData);
 
         return back()->with('success', 'Status pesanan berhasil diperbarui');
     }

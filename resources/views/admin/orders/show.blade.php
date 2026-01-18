@@ -100,6 +100,58 @@
                 </div>
             </div>
         </div>
+
+        <!-- Payment Proof Card (untuk transfer) -->
+        @if($order->payment_method === 'transfer')
+        <div class="card mb-4">
+            <div class="card-header @if($order->proof_status === 'approved') bg-success @elseif($order->proof_status === 'rejected') bg-danger @else bg-warning @endif text-white">
+                <h6 class="mb-0"><i class="fas fa-file-invoice"></i> Payment Proof (Transfer)</h6>
+            </div>
+            <div class="card-body">
+                @if($order->payment_proof)
+                    <div class="mb-3">
+                        <h6 class="text-muted small">Proof Status</h6>
+                        <div>
+                            @if($order->proof_status === 'approved')
+                                <span class="badge bg-success">Approved</span>
+                            @elseif($order->proof_status === 'rejected')
+                                <span class="badge bg-danger">Rejected</span>
+                                @if($order->proof_rejection_reason)
+                                    <div class="alert alert-danger mt-2 mb-0">
+                                        <strong>Reason:</strong>
+                                        <p class="mb-0 small">{{ $order->proof_rejection_reason }}</p>
+                                    </div>
+                                @endif
+                            @else
+                                <span class="badge bg-warning">Pending Review</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="text-muted small">Preview</h6>
+                        <div>
+                            @if(str_ends_with($order->payment_proof, '.pdf'))
+                                <div class="border rounded p-3 text-center bg-light">
+                                    <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                    <p class="text-muted mb-2">PDF File</p>
+                                    <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            @else
+                                <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Payment Proof" class="img-fluid rounded" style="max-width: 100%; max-height: 300px;">
+                            @endif
+                        </div>
+                    </div>
+                @else
+                    <div class="alert alert-warning mb-0">
+                        <i class="fas fa-exclamation-circle"></i> Payment proof not uploaded yet.
+                    </div>
+                @endif
+            </div>
+        </div>
+        @endif
     </div>
 
     <div class="col-lg-4">
@@ -170,7 +222,7 @@
 <!-- Status Change Modal -->
 @if(auth()->user()->isAdmin())
 <div class="modal fade" id="statusModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Change Order Status</h5>
@@ -189,6 +241,30 @@
                             <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                         </select>
                     </div>
+
+                    {{-- Proof status section for transfer payments --}}
+                    @if($order->payment_method === 'transfer' && $order->payment_proof)
+                    <div class="card border-warning mb-3">
+                        <div class="card-header bg-warning bg-opacity-10">
+                            <h6 class="mb-0"><i class="fas fa-check-circle"></i> Verify Payment Proof</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="proof_status" class="form-label">Proof Status</label>
+                                <select name="proof_status" id="proof_status" class="form-select">
+                                    <option value="">No Change</option>
+                                    <option value="approved" @if($order->proof_status === 'approved') selected @endif>Approve Proof</option>
+                                    <option value="rejected" @if($order->proof_status === 'rejected') selected @endif>Reject Proof</option>
+                                </select>
+                            </div>
+
+                            <div id="rejection-reason" style="display: none;">
+                                <label for="proof_rejection_reason" class="form-label">Rejection Reason</label>
+                                <textarea name="proof_rejection_reason" id="proof_rejection_reason" class="form-control" rows="3" placeholder="Explain why the payment proof is rejected...">{{ $order->proof_rejection_reason }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -200,4 +276,26 @@
 </div>
 @endif
 
-@endsection
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const proofStatusSelect = document.getElementById('proof_status');
+        const rejectionReasonDiv = document.getElementById('rejection-reason');
+        
+        if (proofStatusSelect) {
+            proofStatusSelect.addEventListener('change', function() {
+                if (this.value === 'rejected') {
+                    rejectionReasonDiv.style.display = 'block';
+                    document.getElementById('proof_rejection_reason').required = true;
+                } else {
+                    rejectionReasonDiv.style.display = 'none';
+                    document.getElementById('proof_rejection_reason').required = false;
+                }
+            });
+            
+            // Initial state
+            if (proofStatusSelect.value === 'rejected') {
+                rejectionReasonDiv.style.display = 'block';
+            }
+        }
+    });
+</script>

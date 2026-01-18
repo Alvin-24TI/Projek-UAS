@@ -119,7 +119,7 @@
                     @foreach ($order->orderItems->take(3) as $item)
                         <div class="col-4 col-md-2 mb-2 text-center">
                             @if ($item->product->image)
-                                <img src="{{ asset('storage/products/' . $item->product->image) }}"
+                                <img src="{{ asset('storage/' . $item->product->image) }}"
                                     alt="{{ $item->product->name }}"
                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
                             @else

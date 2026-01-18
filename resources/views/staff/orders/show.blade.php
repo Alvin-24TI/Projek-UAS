@@ -144,6 +144,63 @@
                 </div>
             </div>
 
+<!-- Payment Proof Card (untuk transfer) -->
+            @if($order->payment_method === 'transfer')
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 @if($order->proof_status === 'approved') bg-success @elseif($order->proof_status === 'rejected') bg-danger @else bg-warning @endif">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-file-invoice"></i> Bukti Pembayaran Transfer
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @if($order->payment_proof)
+                        <div class="mb-3">
+                            <h6 class="text-muted small">Status Bukti</h6>
+                            <div class="mb-3">
+                                @if($order->proof_status === 'approved')
+                                    <span class="badge bg-success">Disetujui</span>
+                                @elseif($order->proof_status === 'rejected')
+                                    <span class="badge bg-danger">Ditolak</span>
+                                    @if($order->proof_rejection_reason)
+                                        <div class="alert alert-danger mt-2">
+                                            <strong>Alasan Penolakan:</strong>
+                                            <p class="mb-0">{{ $order->proof_rejection_reason }}</p>
+                                        </div>
+                                    @endif
+                                @else
+                                    <span class="badge bg-warning">Menunggu Verifikasi</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="text-muted small">Preview Bukti Pembayaran</h6>
+                            @if(str_ends_with($order->payment_proof, '.pdf'))
+                                <div class="border rounded p-3 text-center bg-light">
+                                    <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                                    <p class="text-muted">File PDF</p>
+                                    <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            @else
+                                <img src="{{ asset('storage/' . $order->payment_proof) }}" alt="Payment Proof" class="img-fluid rounded" style="max-width: 400px;">
+                            @endif
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="text-muted small">Tanggal Upload</h6>
+                            <p class="font-weight-bold">{{ $order->created_at->format('d M Y H:i') }}</p>
+                        </div>
+                    @else
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-circle"></i> Bukti pembayaran belum diupload oleh pelanggan.
+                        </div>
+                    @endif
+                </div>
+            </div>
+            @endif
+
             <!-- Order Items Card -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3 bg-info">
@@ -155,9 +212,9 @@
                             <!-- Product Image -->
                             <div class="me-3">
                                 @if($item->product->image)
-                                    <img src="{{ asset('storage/products/' . $item->product->image) }}"
+                                    <img src="{{ asset('storage/' . $item->product->image) }}"
                                         alt="{{ $item->product->name }}"
-                                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
+                                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; display: block;">
                                 @else
                                     <div class="bg-light d-flex align-items-center justify-content-center"
                                         style="width: 80px; height: 80px; border-radius: 5px;">
@@ -218,7 +275,7 @@
 
     <!-- Status Update Modal -->
     <div class="modal fade" id="statusModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <form action="{{ route('staff.orders.update-status', $order->id) }}" method="POST">
                     @csrf
@@ -241,6 +298,30 @@
                                 @endif
                             </select>
                         </div>
+
+                        {{-- Proof status section for transfer payments --}}
+                        @if($order->payment_method === 'transfer' && $order->payment_proof)
+                        <div class="card border-warning mb-3">
+                            <div class="card-header bg-warning bg-opacity-10">
+                                <h6 class="mb-0"><i class="fas fa-check-circle"></i> Verifikasi Bukti Pembayaran</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="proof_status" class="form-label fw-bold">Status Bukti</label>
+                                    <select name="proof_status" id="proof_status" class="form-select">
+                                        <option value="">Tidak Ada Perubahan</option>
+                                        <option value="approved" @if($order->proof_status === 'approved') selected @endif>Setujui Bukti</option>
+                                        <option value="rejected" @if($order->proof_status === 'rejected') selected @endif>Tolak Bukti</option>
+                                    </select>
+                                </div>
+
+                                <div id="rejection-reason" style="display: none;">
+                                    <label for="proof_rejection_reason" class="form-label fw-bold">Alasan Penolakan</label>
+                                    <textarea name="proof_rejection_reason" id="proof_rejection_reason" class="form-control" rows="3" placeholder="Jelaskan alasan penolakan bukti pembayaran...">{{ $order->proof_rejection_reason }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -250,5 +331,29 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const proofStatusSelect = document.getElementById('proof_status');
+            const rejectionReasonDiv = document.getElementById('rejection-reason');
+            
+            if (proofStatusSelect) {
+                proofStatusSelect.addEventListener('change', function() {
+                    if (this.value === 'rejected') {
+                        rejectionReasonDiv.style.display = 'block';
+                        document.getElementById('proof_rejection_reason').required = true;
+                    } else {
+                        rejectionReasonDiv.style.display = 'none';
+                        document.getElementById('proof_rejection_reason').required = false;
+                    }
+                });
+                
+                // Initial state
+                if (proofStatusSelect.value === 'rejected') {
+                    rejectionReasonDiv.style.display = 'block';
+                }
+            }
+        });
+    </script>
 </div>
 @endsection

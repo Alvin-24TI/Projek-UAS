@@ -86,16 +86,26 @@ class HomeController extends Controller
         }
 
         // Validate request
-        $validated = $request->validate([
+        $rules = [
             'shipping_address' => 'nullable|string',
             'shipping_phone' => 'nullable|string',
             'shipping_city' => 'nullable|string',
             'payment_method' => 'nullable|in:transfer,cod,card'
-        ], [], [
+        ];
+
+        // Add payment_proof validation if payment method is transfer
+        if ($request->payment_method === 'transfer') {
+            $rules['payment_proof'] = 'required|file|mimes:jpeg,png,jpg,pdf|max:5120';
+        } else {
+            $rules['payment_proof'] = 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120';
+        }
+
+        $validated = $request->validate($rules, [], [
             'shipping_address' => 'Alamat Pengiriman',
             'shipping_phone' => 'Nomor Telepon',
             'shipping_city' => 'Kota',
-            'payment_method' => 'Metode Pembayaran'
+            'payment_method' => 'Metode Pembayaran',
+            'payment_proof' => 'Bukti Pembayaran'
         ]);
 
         $user = auth()->user();
@@ -126,7 +136,7 @@ class HomeController extends Controller
             // Create order
             $orderNumber = 'ORD-' . now()->format('YmdHis') . '-' . rand(100, 999);
 
-            $order = Order::create([
+            $orderData = [
                 'user_id' => $user->id,
                 'order_number' => $orderNumber,
                 'status' => 'pending',
@@ -135,7 +145,17 @@ class HomeController extends Controller
                 'shipping_phone' => $validated['shipping_phone'],
                 'shipping_city' => $validated['shipping_city'],
                 'payment_method' => $validated['payment_method']
-            ]);
+            ];
+
+            // Handle payment proof upload
+            if ($request->hasFile('payment_proof')) {
+                $file = $request->file('payment_proof');
+                $path = $file->store('payment-proofs', 'public');
+                $orderData['payment_proof'] = $path;
+                $orderData['proof_status'] = 'pending';
+            }
+
+            $order = Order::create($orderData);
 
             // Create order items and deduct stock
             foreach ($orderItems as $productId => $itemData) {
