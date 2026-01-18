@@ -41,15 +41,6 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="jobdesc" class="form-label">Detailed Job Description</label>
-                <textarea name="jobdesc" id="jobdesc" class="form-control @error('jobdesc') is-invalid @enderror" rows="6" placeholder="Masukkan deskripsi detail produk, spesifikasi, features, dll...">{{ old('jobdesc') }}</textarea>
-                @error('jobdesc')
-                <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-                <small class="text-muted">Gunakan format yang jelas dan detail untuk memberikan informasi lengkap kepada pelanggan</small>
-            </div>
-
             <div class="row">
                 <div class="col-md-6">
                     <div class="mb-3">

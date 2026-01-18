@@ -59,18 +59,6 @@
             </div>
         @endif
 
-        <!-- Detailed Job Description -->
-        @if ($product->jobdesc)
-            <div class="mb-4">
-                <h5 class="fw-bold mb-2" style="font-size: 1rem;">Informasi Lengkap Produk</h5>
-                <div class="card border-left border-primary border-4" style="border-left-width: 4px !important;">
-                    <div class="card-body p-3" style="font-size: 0.95rem; line-height: 1.7;">
-                        {!! nl2br(e($product->jobdesc)) !!}
-                    </div>
-                </div>
-            </div>
-        @endif
-
         <!-- Divider -->
         <hr>
 
